@@ -25,7 +25,7 @@ function setColorsOption(product) {
     })
 }
 
-function setPageTitle(product) {
+function setTitle(product) {
     document.querySelector('title').textContent = product.name;
     document.querySelector('#title').textContent = product.name;
 }
@@ -36,7 +36,7 @@ async function getProductDetails(url) {
     const response = await fetch(apiRequest);
     const product = await response.json();
     displayProductImage(product);
-    setPageTitle(product);
+    setTitle(product);
     displayPrice(product);
     displayDescription(product);
     setColorsOption(product);
@@ -59,20 +59,22 @@ function addToCart() {
             color: color,
             quantity: quantity,
         };
-        /*
+        
         for (let i = 0; i < localStorage.length; i++) {
             let key = localStorage.key(i);
             let product = localStorage.getItem(key);
             let productJson = JSON.parse(product);
-            console.log(obj);
-            console.log(productJson);
             if (productJson.id === obj.id && productJson.color === obj.color) {
+                console.log(obj);
                 productJson.quantity += obj.quantity;
+                console.log(productJson.quantity);
                 product = JSON.stringify(productJson);
                 localStorage.setItem(key, product);
+                alert('Produit ajouté au panier');
+                return;
             }
         }
-        */
+        
         const objStr = JSON.stringify(obj);
         localStorage.setItem(name, objStr);
         alert('Produit ajouté au panier');
