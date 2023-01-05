@@ -14,9 +14,13 @@ function displayProduct(product) {
 
 // Requête HTTP vers l'API puis affichage de l'ensemble des produits
 async function getAllProducts(url) {
-    const response = await fetch(url);
-    const products = await response.json();
-    products.forEach(product => displayProduct(product));
+    try {
+        const response = await fetch(url);
+        const products = await response.json();
+        products.forEach(product => displayProduct(product));
+    } catch(e) {
+        console.error(e);
+    }
 }
 
 

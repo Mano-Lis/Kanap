@@ -31,15 +31,19 @@ function setTitle(product) {
 }
 
 async function getProductDetails(url) {
-    const id = url.searchParams.get('id');
-    const apiRequest = `http://localhost:3000/api/products/` + `${id}`;
-    const response = await fetch(apiRequest);
-    const product = await response.json();
-    displayProductImage(product);
-    setTitle(product);
-    displayPrice(product);
-    displayDescription(product);
-    setColorsOption(product);
+    try {
+        const id = url.searchParams.get('id');
+        const apiRequest = `http://localhost:3000/api/products/` + `${id}`;
+        const response = await fetch(apiRequest);
+        const product = await response.json();
+        displayProductImage(product);
+        setTitle(product);
+        displayPrice(product);
+        displayDescription(product);
+        setColorsOption(product);
+    } catch(e) {
+        console.error(e);
+    }
 }
 
 
@@ -49,6 +53,7 @@ function addToCart() {
     const color = document.querySelector('#colors').value;
     const quantity = +document.querySelector('#quantity').value;
     const name = document.querySelector('#title').textContent;
+    const price = +document.querySelector('#price').textContent;
 
     if (quantity <= 0) alert('Veuillez sélectionner au moins un produit');
     if (color === '') alert('Veuillez renseigner la couleur de votre produit');
@@ -58,6 +63,7 @@ function addToCart() {
             id: id,
             color: color,
             quantity: quantity,
+            price: price,
         };
         
         for (let i = 0; i < localStorage.length; i++) {
