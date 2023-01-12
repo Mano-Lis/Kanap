@@ -68,7 +68,7 @@ h2 {
 .cart__item__content__settings__delete p {
 	display: inline;
 }
-.cart__item__content__settings__delete p:hover {
+.cart__item__content__settings__delete button:hover {
 	cursor: pointer;
 	font-weight: 700;
 }
