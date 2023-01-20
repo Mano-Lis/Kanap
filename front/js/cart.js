@@ -205,12 +205,14 @@ form.addEventListener('submit', async function (e) {
         const cart = getCart();
         const productsArr = await getAllProducts(cart);
         const products = productsArr.map(product => product._id);
-        const requestBody = [
+        const requestBody = {
             contact,
             products,
-        ];
+        };
 
-        const response = await fetch('http://localhost:3000/api/order/', {
+        console.log(requestBody);
+
+        const response = await fetch('http://localhost:3000/api/products/order', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
