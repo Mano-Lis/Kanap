@@ -128,7 +128,7 @@ async function displayTotalPriceAndQuantity() {
 }
 
 
-//On affiche la page et on lance les écouteurs d'événements
+//On affiche la page et on lance les écouteurs d'événements pour la gestion du contenu du panier
 
 displayPage();
 
@@ -163,8 +163,7 @@ cartSection.addEventListener('change', (event) => {
 });
 
 
-// Gestion du formulaire
-
+                  /* Gestion du formulaire */
 const form = document.querySelector('.cart__order__form');
 
 const firstNameField = document.querySelector('#firstName');
@@ -173,6 +172,7 @@ const addressField = document.querySelector('#address');
 const cityField = document.querySelector('#city');
 const emailField = document.querySelector('#email');
 
+// Validation des champs du formulaire
 function validationForm() {
     const validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailField.value);
     if (!validEmail) alert('L\'adresse email n\'est pas valide');
@@ -191,9 +191,36 @@ function validationForm() {
     return validEmail && validFirstName && validLastName && validCity && validAddress;
 }
 
-form.addEventListener('submit', function (e) {
+form.addEventListener('submit', async function (e) {
     e.preventDefault();
-    console.log(validationForm());
+    if (validationForm()) {
+        const contact = {
+            firstName: firstNameField.value,
+            lastName: lastNameField.value,
+            address: addressField.value,
+            city: cityField.value,
+            email: emailField.value,
+        };
+
+        const cart = getCart();
+        const productsArr = await getAllProducts(cart);
+        const products = productsArr.map(product => product._id);
+        const requestBody = [
+            contact,
+            products,
+        ];
+
+        const response = await fetch('http://localhost:3000/api/order/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        const result = await response.json();
+        console.log(result);
+    }
 } )
 
 
