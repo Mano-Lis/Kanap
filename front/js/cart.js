@@ -137,7 +137,6 @@ cartSection.addEventListener('click', (event) => {
         if (btn.classList.contains('deleteItem')) {
             const article = btn.closest('article');
             const name = article.dataset.name;
-            console.log(name);
             localStorage.removeItem(name);
             displayTotalPriceAndQuantity();
             article.remove();
@@ -176,16 +175,16 @@ const emailField = document.querySelector('#email');
 function validationForm() {
     const validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailField.value);
     if (!validEmail) alert('L\'adresse email n\'est pas valide');
-    const nameRegex = /^(?=.{1,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$/;
+    const nameRegex = /^[a-zA-Z- ]*$/;
     const validLastName = nameRegex.test(lastNameField.value);
     if (!validLastName) alert('Le nom n\'est pas valide');
     const validFirstName = nameRegex.test(firstNameField.value);
     if (!validFirstName) alert('Le prénom n\'est pas valide');
     // vérifie que le champ ne contient que des lettres, espaces et tirets et commence et se termine par une lettre.
-    const validCity = /^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/.test(cityField.value);
+    const validCity = /^[a-zA-Z- ']*$/.test(cityField.value);
     if (!validCity) alert('La ville n\'est pas valide');
     // vérifie que le champ ne continet pas uniquement des espaces, et au moins un chiffre et une lettre
-    const validAddress = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\s]*$/.test(addressField.value);
+    const validAddress = addressField.value !== '' ? true : false;
     if (!validAddress) alert('L\'adresse n\'est pas valide');
 
     return validEmail && validFirstName && validLastName && validCity && validAddress;
@@ -193,35 +192,42 @@ function validationForm() {
 
 form.addEventListener('submit', async function (e) {
     e.preventDefault();
-    if (validationForm()) {
-        const contact = {
-            firstName: firstNameField.value,
-            lastName: lastNameField.value,
-            address: addressField.value,
-            city: cityField.value,
-            email: emailField.value,
-        };
+    try {
+        if (validationForm()) {
+            const contact = {
+                firstName: firstNameField.value,
+                lastName: lastNameField.value,
+                address: addressField.value,
+                city: cityField.value,
+                email: emailField.value,
+            };
 
-        const cart = getCart();
-        const productsArr = await getAllProducts(cart);
-        const products = productsArr.map(product => product._id);
-        const requestBody = {
-            contact,
-            products,
-        };
+            const cart = getCart();
+            const productsArr = await getAllProducts(cart);
+            const products = productsArr.map(product => product._id);
+            const requestBody = {
+                contact,
+                products,
+            };
 
-        console.log(requestBody);
+            const response = await fetch('http://localhost:3000/api/products/order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody)
+            });
 
-        const response = await fetch('http://localhost:3000/api/products/order', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestBody)
-        });
+            const result = await response.json();
 
-        const result = await response.json();
-        console.log(result);
+            if (!result.orderId) {
+                alert('La commande n\'est pas passée. Veuillez réessayer');
+                return;
+            }
+            window.location.href = `./confirmation.html?orderId=${result.orderId}`;
+        } 
+    } catch (err) {
+       console.error(err);     
     }
 } )
 
