@@ -173,6 +173,7 @@ const emailField = document.querySelector('#email');
 
 // Validation des champs du formulaire
 function validationForm() {
+    // This regex comes from https://www.w3resource.com/javascript/form/email-validation.php
     const validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailField.value);
     if (!validEmail) alert('L\'adresse email n\'est pas valide');
     const nameRegex = /^[a-zA-Z- ]*$/;
