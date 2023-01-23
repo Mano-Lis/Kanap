@@ -173,16 +173,16 @@ const emailField = document.querySelector('#email');
 
 // Validation des champs du formulaire
 function validationForm() {
-    // This regex comes from https://www.w3resource.com/javascript/form/email-validation.php
+    // Cette regex provient de https://www.w3resource.com/javascript/form/email-validation.php
     const validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailField.value);
     if (!validEmail) alert('L\'adresse email n\'est pas valide');
-    const nameRegex = /^[a-zA-Z- ]*$/;
+    const nameRegex = /^(?<![⁻ ])[a-zA-Z\u00C0-\u017F- ]+(?<![- ])$/;
     const validLastName = nameRegex.test(lastNameField.value);
     if (!validLastName) alert('Le nom n\'est pas valide');
     const validFirstName = nameRegex.test(firstNameField.value);
     if (!validFirstName) alert('Le prénom n\'est pas valide');
     // vérifie que le champ ne contient que des lettres, espaces et tirets et commence et se termine par une lettre.
-    const validCity = /^[a-zA-Z- ']*$/.test(cityField.value);
+    const validCity = /^(?<![⁻  '])[a-zA-Z\u00C0-\u017F- ']+(?<![-' ])$/.test(cityField.value);
     if (!validCity) alert('La ville n\'est pas valide');
     // vérifie que le champ ne continet pas uniquement des espaces, et au moins un chiffre et une lettre
     const validAddress = addressField.value !== '' ? true : false;
