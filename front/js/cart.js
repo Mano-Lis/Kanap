@@ -1,6 +1,6 @@
 const cartSection = document.querySelector('#cart__items');
 
-
+// On ajoute au DOM un <article> contenant les informations du produit
 function createCartItem(product) {
     // Création des éléments HTML
     const article = document.createElement('article');
@@ -67,6 +67,7 @@ function createCartItem(product) {
     return article;
 }
 
+// On récupère le contenu du localStorage sous forme de tableau d'objets
 function getCart() {
     const cart = [];
     for (let i = 0; i < localStorage.length; i++) {
@@ -78,16 +79,20 @@ function getCart() {
     return cart;
 }
 
+// On calcule et affiche la quantité totale de produits du panier
 function displayTotalQuantity(products) {
     const totalQuantity = products.reduce((acc, curItem) => acc + parseInt(curItem.quantity), 0);
     document.querySelector('#totalQuantity').textContent =  totalQuantity.toString();
 }
 
+// On calcule et affiche le prix total
 function displayTotalPrice(products) {
     const totalPrice = products.reduce((acc, product) => acc + product.quantity * product.price, 0);
     document.querySelector('#totalPrice').textContent = totalPrice.toString();
 }
 
+// On récupère toutes les informations pour chaque produit du panier en requêtant l'API
+// On y ajoute la quantité et la couleur choisie
 async function getAllProducts(cart) {
     try {
         const products = await Promise.all(
@@ -105,6 +110,7 @@ async function getAllProducts(cart) {
     }
 }
 
+// On affiche ctous les produits du panier 
 function displayAllProducts(products) {
     products.map(product => {
         const cartItem = createCartItem(product);
@@ -112,6 +118,7 @@ function displayAllProducts(products) {
     });
 }
 
+// On execute toutes les opérations nécessaires au bon affichage de la page
 async function displayPage() {
     const cart = getCart();
     const products = await getAllProducts(cart);
@@ -121,6 +128,8 @@ async function displayPage() {
     getAllProducts(cart);
 }
 
+// On définit une fonction qui affiche le prix et la quantité
+// pour mettre uniquement ces informations à jour
 async function displayTotalPriceAndQuantity() {
     const products = await getAllProducts(getCart());
     displayTotalQuantity(products);
@@ -132,6 +141,8 @@ async function displayTotalPriceAndQuantity() {
 
 displayPage();
 
+// Si l'utilisateur clique sur le bouton Supprimer
+// On supprime un produit du panier et on met à jour le prix et la quantité 
 cartSection.addEventListener('click', (event) => {
         const btn = event.target;
         if (btn.classList.contains('deleteItem')) {
@@ -143,6 +154,7 @@ cartSection.addEventListener('click', (event) => {
         }
 });
 
+// On met à jour l'affichage et le localStorage en fonction des modifications de la quantité d'un produit
 cartSection.addEventListener('change', (event) => {
     const input = event.target;
     if (input.classList.contains('itemQuantity')) {
@@ -176,24 +188,32 @@ function validationForm() {
     // Cette regex provient de https://www.w3resource.com/javascript/form/email-validation.php
     const validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailField.value);
     if (!validEmail) alert('L\'adresse email n\'est pas valide');
+
+    // vérifie que le champ ne contient que des lettres, espaces, tirets
+    // et commence et se termine par une lettre.
     const nameRegex = /^(?<![⁻ ])[a-zA-Z\u00C0-\u017F- ]+(?<![- ])$/;
     const validLastName = nameRegex.test(lastNameField.value);
     if (!validLastName) alert('Le nom n\'est pas valide');
     const validFirstName = nameRegex.test(firstNameField.value);
     if (!validFirstName) alert('Le prénom n\'est pas valide');
-    // vérifie que le champ ne contient que des lettres, espaces et tirets et commence et se termine par une lettre.
+
+    // vérifie que le champ ne contient que des lettres, espaces, tirets et apostrophes
+    // et commence et se termine par une lettre.
     const validCity = /^(?<![⁻  '])[a-zA-Z\u00C0-\u017F- ']+(?<![-' ])$/.test(cityField.value);
     if (!validCity) alert('La ville n\'est pas valide');
-    // vérifie que le champ ne continet pas uniquement des espaces, et au moins un chiffre et une lettre
+
+    // vérifie que le champ n'est pas vide
     const validAddress = addressField.value !== '' ? true : false;
     if (!validAddress) alert('L\'adresse n\'est pas valide');
 
     return validEmail && validFirstName && validLastName && validCity && validAddress;
 }
 
+// Validation de la commande
 form.addEventListener('submit', async function (e) {
     e.preventDefault();
     try {
+        // Si le formulaire est valide, on construit l'objet qui sera envoyé dans le corps de la requête
         if (validationForm()) {
             const contact = {
                 firstName: firstNameField.value,
@@ -210,7 +230,8 @@ form.addEventListener('submit', async function (e) {
                 contact,
                 products,
             };
-
+            
+            // On envoie la requête et on récupère la réponse contenant le numéro de commande
             const response = await fetch('http://localhost:3000/api/products/order', {
                 method: 'POST',
                 headers: {
@@ -221,14 +242,11 @@ form.addEventListener('submit', async function (e) {
 
             const result = await response.json();
 
-            if (!result.orderId) {
-                alert('La commande n\'est pas passée. Veuillez réessayer');
-                return;
-            }
             window.location.href = `./confirmation.html?orderId=${result.orderId}`;
         } 
     } catch (err) {
-       console.error(err);     
+       console.error(err);
+       alert('La commande n\'est pas passée. Veuillez réessayer');     
     }
 } )
 

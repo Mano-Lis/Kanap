@@ -1,23 +1,22 @@
 const url = new URL(window.location.href);
-/*
-function checkIfParamExists(paramName) {
-    const searchParams = new URLSearchParams(url.search); 
-    if (!searchParams.has(paramName)) console.error(`La propriété ${paramName} du produit n'est pas renseignée`);
-}
-*/
+
+// On insère l'image du produit
 function displayProductImage(product) {
     const html = `<img src="${product.imageUrl}" alt="${product.altText}">`;
     document.querySelector('.item__img').insertAdjacentHTML('beforeend', html);
 }
 
+// On insère le prix du produit
 function displayPrice(product) {
     document.querySelector('#price').textContent = product.price;
 }
 
+// On insère la descritpion du produit
 function displayDescription(product) {
     document.querySelector('#description').textContent = product.description;
 }
 
+// 
 function setColorsOption(product) {
     product.colors.forEach(function(color) {
         const html = `<option value="${color}">${color}</option>`;
@@ -25,11 +24,14 @@ function setColorsOption(product) {
     })
 }
 
+// On change le contenu de <title> et on insère le nom du produit comme titre principal de la page
 function setTitle(product) {
     document.querySelector('title').textContent = product.name;
     document.querySelector('#title').textContent = product.name;
 }
 
+// On requête l'API pour obtenir tous les détails du produit
+// Puis on affiche ces détails à l'aide des fonctions ci-dessus
 async function getProductDetails(url) {
     try {
         const id = url.searchParams.get('id');
@@ -47,13 +49,14 @@ async function getProductDetails(url) {
 }
 
 
-
+// On ajoute le produit au panier
 function addToCart() {
     const id = url.searchParams.get('id');
     const color = document.querySelector('#colors').value;
     const quantity = +document.querySelector('#quantity').value;
     const name = document.querySelector('#title').textContent;
 
+    // On vérifie que le produit dispose des caractéristiques nécessaires (quantité et couleur)
     if (quantity <= 0) alert('Veuillez sélectionner au moins un produit');
     if (color === '') alert('Veuillez renseigner la couleur de votre produit');
 
@@ -63,7 +66,9 @@ function addToCart() {
             color: color,
             quantity: quantity,
         };
-        
+        // On stocke ces informations dans le localStorage
+        // On vérifie que le même produit n'y est pas déjà
+        // Dans ce cas on met simplement à jour la quantité
         for (let i = 0; i < localStorage.length; i++) {
             let key = localStorage.key(i);
             let product = localStorage.getItem(key);
