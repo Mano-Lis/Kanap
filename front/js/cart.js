@@ -187,24 +187,24 @@ const emailField = document.querySelector('#email');
 function validationForm() {
     // Cette regex provient de https://www.w3resource.com/javascript/form/email-validation.php
     const validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailField.value);
-    if (!validEmail) document.querySelector('#emailErrorMsg').innerHTML = 'L\'adresse-mail n\'est pas valide';
+    if (!validEmail) document.querySelector('#emailErrorMsg').textContent = 'L\'adresse-mail n\'est pas valide';
 
     // vérifie que le champ ne contient que des lettres, espaces, tirets
     // et commence et se termine par une lettre.
     const nameRegex = /[a-zA-Z\u00C0-\u017F- ]+$/;
     const validLastName = nameRegex.test(lastNameField.value);
-    if (!validLastName) document.querySelector('#lastNameErrorMsg').innerHTML = 'Le nom n\'est pas valide';
+    if (!validLastName) document.querySelector('#lastNameErrorMsg').textContent = 'Le nom n\'est pas valide';
     const validFirstName = nameRegex.test(firstNameField.value);
-    if (!validFirstName) document.querySelector('#firstNameErrorMsg').innerHTML = 'Le prénom n\'est pas valide';
+    if (!validFirstName) document.querySelector('#firstNameErrorMsg').textContent = 'Le prénom n\'est pas valide';
 
     // vérifie que le champ ne contient que des lettres, espaces, tirets et apostrophes
     // et commence et se termine par une lettre.
     const validCity = /[a-zA-Z\u00C0-\u017F- ']+$/.test(cityField.value);
-    if (!validCity) document.querySelector('#cityErrorMsg').innerHTML = 'La ville n\'est pas valide';
+    if (!validCity) document.querySelector('#cityErrorMsg').textContent = 'La ville n\'est pas valide';
 
     // vérifie que le champ n'est pas vide
     const validAddress = addressField.value !== '' ? true : false;
-    if (!validAddress) document.querySelector('#addressErrorMsg').innerHTML = 'Le champ adresse est vide';
+    if (!validAddress) document.querySelector('#addressErrorMsg').textContent = 'Le champ adresse est vide';
 
     return validEmail && validFirstName && validLastName && validCity && validAddress;
 }
