@@ -35,7 +35,7 @@ function setTitle(product) {
 async function getProductDetails(url) {
     try {
         const id = url.searchParams.get('id');
-        const apiRequest = `http://localhost:3000/api/products/` + `${id}`;
+        const apiRequest = `http://localhost:3000/api/products/${id}`;
         const response = await fetch(apiRequest);
         const product = await response.json();
         displayProductImage(product);

@@ -97,7 +97,7 @@ async function getAllProducts(cart) {
     try {
         const products = await Promise.all(
             cart.map(async item => {
-            const response = await fetch(`http://localhost:3000/api/products/` + `${item.id}`);
+            const response = await fetch(`http://localhost:3000/api/products/${item.id}`);
             const product = await response.json();
             product.quantity = item.quantity;
             product.chosenColor = item.color;
