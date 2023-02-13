@@ -148,7 +148,9 @@ cartSection.addEventListener('click', (event) => {
         if (btn.classList.contains('deleteItem')) {
             const article = btn.closest('article');
             const name = article.dataset.name;
-            localStorage.removeItem(name);
+            const color = article.dataset.color;
+            localStorage.removeItem(name + '_' + color);
+            console.log(localStorage);
             displayTotalPriceAndQuantity();
             article.remove();
         }
@@ -248,15 +250,5 @@ form.addEventListener('submit', async function (e) {
        console.error(err);
        alert('La commande n\'est pas passée. Veuillez réessayer');     
     }
-} )
-
-
-
-
-
-
-
-
-
-
+});
   

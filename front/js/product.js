@@ -83,7 +83,7 @@ function addToCart() {
         }
         
         const objStr = JSON.stringify(obj);
-        localStorage.setItem(name, objStr);
+        localStorage.setItem(name + '_' + color, objStr);
         alert('Produit ajouté au panier');
     }
  
