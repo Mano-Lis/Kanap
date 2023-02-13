@@ -163,14 +163,15 @@ cartSection.addEventListener('change', (event) => {
         const article = input.closest('article');
         document.querySelector('.cart__item__content__settings__quantity p').textContent = `Qté : ${input.value}`;
         const name = article.dataset.name;
-        localStorage.removeItem(name);
+        const color = article.dataset.color;
+        localStorage.removeItem(name + '_' + color);
         const obj = {
             id: article.dataset.id,
             color: article.dataset.color,
-            quantity: input.value
+            quantity: +input.value
         };
         const objStr = JSON.stringify(obj);
-        localStorage.setItem(name, objStr);
+        localStorage.setItem(name + '_' + color, objStr);
         displayTotalPriceAndQuantity();
     }
 });
